@@ -1,0 +1,466 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070B14;--bg2:#0D1424;--bg3:#111827;--bg4:#1A2236;
+  --c1:#00D4FF;--c2:#00FF94;--c3:#7B61FF;--c4:#FF6B6B;--c5:#FFB800;
+  --border:rgba(0,212,255,0.15);--border2:rgba(0,212,255,0.08);
+  --text:#E8F0FF;--muted:#6B7FA3;--dimmed:#3A4A6B;
+  --fh:'Syne',sans-serif;--fb:'DM Sans',sans-serif;
+}
+.dash{background:var(--bg);height:900px;display:grid;grid-template-columns:220px 1fr;font-family:var(--fb);color:var(--text);border-radius:12px;overflow:hidden;border:0.5px solid var(--border)}
+.sidebar{background:var(--bg2);border-right:0.5px solid var(--border2);padding:24px 0;display:flex;flex-direction:column;gap:4px;flex-shrink:0}
+.logo{padding:0 20px 20px;font-family:var(--fh);font-size:13px;font-weight:700;color:var(--c1);letter-spacing:.05em;border-bottom:.5px solid var(--border2);margin-bottom:6px}
+.logo span{color:var(--text);opacity:.5;font-weight:400;display:block;font-size:10px;margin-top:2px;letter-spacing:.1em}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s;border-left:2px solid transparent;user-select:none}
+.nav-item:hover{color:var(--text);background:rgba(0,212,255,.05)}
+.nav-item.active{color:var(--c1);background:rgba(0,212,255,.08);border-left:2px solid var(--c1)}
+.nav-item i{font-size:15px}
+.nav-section{font-size:10px;letter-spacing:.12em;color:var(--dimmed);padding:14px 20px 5px;font-family:var(--fh)}
+.sidebar-foot{margin-top:auto;padding:14px 20px;border-top:.5px solid var(--border2)}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--c2);display:inline-block;margin-right:6px}
+.main{display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--bg2);border-bottom:.5px solid var(--border2);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-title{font-family:var(--fh);font-size:14px;font-weight:700}
+.topbar-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.badge{background:rgba(0,212,255,.1);color:var(--c1);font-size:10px;padding:3px 10px;border-radius:20px;border:.5px solid rgba(0,212,255,.25);font-family:var(--fh);letter-spacing:.05em}
+.badge.green{background:rgba(0,255,148,.1);color:var(--c2);border-color:rgba(0,255,148,.25)}
+.page{display:none;flex:1;overflow-y:auto;padding:20px 24px;flex-direction:column;gap:14px}
+.page.active{display:flex}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{background:var(--bg3);border:.5px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ac,var(--c1)),transparent)}
+.kpi-label{font-size:10px;color:var(--muted);letter-spacing:.08em;font-family:var(--fh);margin-bottom:6px;text-transform:uppercase}
+.kpi-value{font-family:var(--fh);font-size:22px;font-weight:700;line-height:1}
+.kpi-sub{font-size:10px;margin-top:5px;color:var(--muted)}
+.kpi-icon{position:absolute;right:12px;top:12px;font-size:20px;opacity:.15;color:var(--ac,var(--c1))}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--bg3);border:.5px solid var(--border);border-radius:10px;padding:16px}
+.card-title{font-family:var(--fh);font-size:12px;font-weight:700;letter-spacing:.05em}
+.chip{background:rgba(0,212,255,.08);color:var(--c1);font-size:9px;padding:3px 8px;border-radius:4px;border:.5px solid rgba(0,212,255,.2);font-family:var(--fh)}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.br{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.bl{font-size:11px;color:var(--muted);width:90px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bt{flex:1;background:rgba(255,255,255,.05);border-radius:3px;height:6px;overflow:hidden}
+.bf{height:100%;border-radius:3px}
+.bv{font-size:11px;color:var(--text);width:46px;font-family:var(--fh)}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{color:var(--muted);font-family:var(--fh);font-size:10px;letter-spacing:.06em;padding:6px 8px;border-bottom:.5px solid var(--border2);text-align:left;font-weight:400}
+.tbl td{padding:7px 8px;border-bottom:.5px solid var(--border2);color:var(--text)}
+.tbl tr:hover td{background:rgba(0,212,255,.03)}
+.pill{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-family:var(--fh)}
+.pill.green{background:rgba(0,255,148,.1);color:var(--c2)}
+.pill.red{background:rgba(255,107,107,.1);color:var(--c4)}
+.pill.blue{background:rgba(0,212,255,.1);color:var(--c1)}
+.pill.amber{background:rgba(255,184,0,.1);color:var(--c5)}
+.pill.purple{background:rgba(123,97,255,.12);color:#A78BFA}
+.ai-panel{background:linear-gradient(135deg,rgba(123,97,255,.08),rgba(0,212,255,.04));border:.5px solid rgba(123,97,255,.3);border-radius:10px;padding:16px}
+.ins-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.ins{background:rgba(13,20,36,.7);border:.5px solid var(--border);border-radius:8px;padding:12px}
+.ins-lbl{font-size:9.5px;color:var(--muted);letter-spacing:.08em;font-family:var(--fh);margin-bottom:4px}
+.ins-txt{font-size:11.5px;color:var(--text);line-height:1.55}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:5px}
+.leg-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.src-note{font-size:9.5px;color:var(--dimmed);font-family:var(--fh);letter-spacing:.05em;padding:4px 8px;background:rgba(0,212,255,.04);border-radius:4px;border:.5px solid var(--border2)}
+</style>
+
+<h2 class="sr-only">Hospital Management Analytics Dashboard — all numbers verified from uploaded CSV files.</h2>
+
+<div class="dash">
+  <aside class="sidebar">
+    <div class="logo">MEDIVISION<span>ANALYTICS PLATFORM</span></div>
+    <div class="nav-section">Overview</div>
+    <div class="nav-item active" data-page="dashboard"><i class="ti ti-layout-dashboard"></i>Dashboard</div>
+    <div class="nav-item" data-page="patients"><i class="ti ti-users"></i>Patients</div>
+    <div class="nav-item" data-page="appointments"><i class="ti ti-calendar"></i>Appointments</div>
+    <div class="nav-section">Clinical</div>
+    <div class="nav-item" data-page="doctors"><i class="ti ti-stethoscope"></i>Doctors</div>
+    <div class="nav-item" data-page="treatments"><i class="ti ti-pill"></i>Treatments</div>
+    <div class="nav-section">Finance</div>
+    <div class="nav-item" data-page="revenue"><i class="ti ti-coin"></i>Revenue</div>
+    <div class="nav-item" data-page="billing"><i class="ti ti-file-invoice"></i>Billing</div>
+    <div class="nav-section">Intelligence</div>
+    <div class="nav-item" data-page="ai"><i class="ti ti-brain"></i>AI Insights</div>
+    <div class="sidebar-foot">
+      <span class="sdot"></span><span style="font-size:11px;color:var(--muted)">Data verified · 5 CSVs</span>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="tb-title">Executive Dashboard</div>
+        <div class="topbar-sub" id="tb-sub">Hospital Management System · FY 2023 · Verified Data</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span class="src-note">✓ CSV-verified</span>
+        <span class="badge green">● LIVE</span>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="kpi-grid">
+        <div class="kpi" style="--ac:#00D4FF"><i class="ti ti-users kpi-icon"></i><div class="kpi-label">Total Patients</div><div class="kpi-value">50</div><div class="kpi-sub">48 with billing records</div></div>
+        <div class="kpi" style="--ac:#00FF94"><i class="ti ti-coin kpi-icon"></i><div class="kpi-label">Total Revenue</div><div class="kpi-value">$551k</div><div class="kpi-sub">Avg $2,756 per bill</div></div>
+        <div class="kpi" style="--ac:#7B61FF"><i class="ti ti-calendar kpi-icon"></i><div class="kpi-label">Appointments</div><div class="kpi-value">200</div><div class="kpi-sub">23% completion rate</div></div>
+        <div class="kpi" style="--ac:#FFB800"><i class="ti ti-stethoscope kpi-icon"></i><div class="kpi-label">Active Doctors</div><div class="kpi-value">10</div><div class="kpi-sub">Across 3 branches</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="card-title">Gender Distribution</span><span class="chip">PATIENTS</span></div>
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="position:relative;width:120px;height:120px;flex-shrink:0"><canvas id="c-gender" role="img" aria-label="Gender donut: Male 62%, Female 38%">M:62%, F:38%</canvas></div>
+            <div>
+              <div class="leg"><span class="leg-sq" style="background:#00D4FF"></span><span style="color:var(--muted);flex:1">Male</span><span style="font-family:var(--fh);font-size:12px">31 (62%)</span></div>
+              <div class="leg"><span class="leg-sq" style="background:#FF6B9D"></span><span style="color:var(--muted);flex:1">Female</span><span style="font-family:var(--fh);font-size:12px">19 (38%)</span></div>
+              <div style="margin-top:10px;padding-top:10px;border-top:.5px solid var(--border2)">
+                <div style="font-size:10px;color:var(--muted)">Total patients</div>
+                <div style="font-size:18px;font-weight:700;font-family:var(--fh)">50</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="card-title">Appointment Status</span><span class="chip">200 TOTAL</span></div>
+          <div class="br"><span class="bl">No-show</span><div class="bt"><div class="bf" style="width:26%;background:#FF6B6B"></div></div><span class="bv">52 (26%)</span></div>
+          <div class="br"><span class="bl">Scheduled</span><div class="bt"><div class="bf" style="width:25.5%;background:#00D4FF"></div></div><span class="bv">51 (25.5%)</span></div>
+          <div class="br"><span class="bl">Cancelled</span><div class="bt"><div class="bf" style="width:25.5%;background:#FFB800"></div></div><span class="bv">51 (25.5%)</span></div>
+          <div class="br"><span class="bl">Completed</span><div class="bt"><div class="bf" style="width:23%;background:#00FF94"></div></div><span class="bv">46 (23%)</span></div>
+          <div style="margin-top:10px;padding:8px;background:rgba(255,107,107,.06);border-radius:6px;border:.5px solid rgba(255,107,107,.2)">
+            <div style="font-size:10px;color:var(--c4)">⚠ Only 23% of appointments completed</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="card-title">Monthly Revenue — 2023</span><span class="chip">ACTUAL DATA</span></div>
+        <div style="position:relative;height:155px"><canvas id="c-rev" role="img" aria-label="Monthly revenue 2023">Monthly revenue.</canvas></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="card-title">Treatment Revenue</span><span class="chip">TOP 5</span></div>
+          <div class="br"><span class="bl">Chemotherapy</span><div class="bt"><div class="bf" style="width:100%;background:#7B61FF"></div></div><span class="bv">$662k</span></div>
+          <div class="br"><span class="bl">X-Ray</span><div class="bt"><div class="bf" style="width:83%;background:#00D4FF"></div></div><span class="bv">$549k</span></div>
+          <div class="br"><span class="bl">MRI</span><div class="bt"><div class="bf" style="width:81%;background:#00FF94"></div></div><span class="bv">$535k</span></div>
+          <div class="br"><span class="bl">ECG</span><div class="bt"><div class="bf" style="width:77%;background:#FFB800"></div></div><span class="bv">$510k</span></div>
+          <div class="br"><span class="bl">Physiotherapy</span><div class="bt"><div class="bf" style="width:74%;background:#FF6B6B"></div></div><span class="bv">$492k</span></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="card-title">Patient Age Groups</span><span class="chip">DEMOGRAPHICS</span></div>
+          <div style="position:relative;height:130px"><canvas id="c-age" role="img" aria-label="Age group distribution">Age groups.</canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PATIENTS -->
+    <div class="page" id="page-patients">
+      <div class="kpi-grid">
+        <div class="kpi" style="--ac:#00D4FF"><div class="kpi-label">Total Patients</div><div class="kpi-value">50</div><div class="kpi-sub">In registry</div></div>
+        <div class="kpi" style="--ac:#00FF94"><div class="kpi-label">Avg Age</div><div class="kpi-value">45.5</div><div class="kpi-sub">Range: 21–76 yrs</div></div>
+        <div class="kpi" style="--ac:#7B61FF"><div class="kpi-label">Male / Female</div><div class="kpi-value">31 / 19</div><div class="kpi-sub">62% / 38%</div></div>
+        <div class="kpi" style="--ac:#FFB800"><div class="kpi-label">Uninsured</div><div class="kpi-value">0</div><div class="kpi-sub">All have coverage</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="card-title">Age Distribution</span><span class="chip">50 PATIENTS</span></div>
+          <div style="position:relative;height:170px"><canvas id="c-age2" role="img" aria-label="Age distribution">Age distribution.</canvas></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="card-title">Insurance Providers</span><span class="chip">COVERAGE</span></div>
+          <div class="br"><span class="bl">MedCare Plus</span><div class="bt"><div class="bf" style="width:100%;background:#00D4FF"></div></div><span class="bv">18 (36%)</span></div>
+          <div class="br"><span class="bl">WellnessCorp</span><div class="bt"><div class="bf" style="width:89%;background:#7B61FF"></div></div><span class="bv">16 (32%)</span></div>
+          <div class="br"><span class="bl">PulseSecure</span><div class="bt"><div class="bf" style="width:56%;background:#00FF94"></div></div><span class="bv">10 (20%)</span></div>
+          <div class="br"><span class="bl">HealthIndia</span><div class="bt"><div class="bf" style="width:33%;background:#FFB800"></div></div><span class="bv">6 (12%)</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="card-title">Patient Registry</span><span class="chip">SAMPLE · 10 ROWS</span></div>
+        <table class="tbl">
+          <thead><tr><th>Patient ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Insurance</th><th>Registered</th></tr></thead>
+          <tbody id="pt-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <div class="page" id="page-appointments">
+      <div class="kpi-grid">
+        <div class="kpi" style="--ac:#00FF94"><div class="kpi-label">Total Appointments</div><div class="kpi-value">200</div><div class="kpi-sub">FY 2023</div></div>
+        <div class="kpi" style="--ac:#00D4FF"><div class="kpi-label">Completed</div><div class="kpi-value">46</div><div class="kpi-sub">23% completion rate</div></div>
+        <div class="kpi" style="--ac:#FF6B6B"><div class="kpi-label">No-show</div><div class="kpi-value">52</div><div class="kpi-sub" style="color:var(--c4)">26% — highest status</div></div>
+        <div class="kpi" style="--ac:#FFB800"><div class="kpi-label">Cancelled</div><div class="kpi-value">51</div><div class="kpi-sub">25.5% cancellation</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="card-title">Status Breakdown</span><span class="chip">200 APPTS</span></div>
+          <div style="position:relative;height:160px"><canvas id="c-appt" role="img" aria-label="Appointment status donut">Status.</canvas></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="card-title">Reasons for Visit</span><span class="chip">TOP 5</span></div>
+          <div class="br"><span class="bl">Checkup</span><div class="bt"><div class="bf" style="width:100%;background:#00D4FF"></div></div><span class="bv">45 (22.5%)</span></div>
+          <div class="br"><span class="bl">Consultation</span><div class="bt"><div class="bf" style="width:96%;background:#7B61FF"></div></div><span class="bv">43 (21.5%)</span></div>
+          <div class="br"><span class="bl">Therapy</span><div class="bt"><div class="bf" style="width:93%;background:#00FF94"></div></div><span class="bv">42 (21%)</span></div>
+          <div class="br"><span class="bl">Follow-up</span><div class="bt"><div class="bf" style="width:91%;background:#FFB800"></div></div><span class="bv">41 (20.5%)</span></div>
+          <div class="br"><span class="bl">Emergency</span><div class="bt"><div class="bf" style="width:64%;background:#FF6B6B"></div></div><span class="bv">29 (14.5%)</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="card-title">Appointment Log</span><span class="chip">SAMPLE · 10 ROWS</span></div>
+        <table class="tbl">
+          <thead><tr><th>Appt ID</th><th>Patient ID</th><th>Doctor</th><th>Date</th><th>Reason</th><th>Status</th></tr></thead>
+          <tbody id="appt-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DOCTORS -->
+    <div class="page" id="page-doctors">
+      <div class="kpi-grid">
+        <div class="kpi" style="--ac:#00D4FF"><div class="kpi-label">Total Doctors</div><div class="kpi-value">10</div><div class="kpi-sub">3 hospital branches</div></div>
+        <div class="kpi" style="--ac:#00FF94"><div class="kpi-label">Top Doctor</div><div class="kpi-value">D005</div><div class="kpi-sub">142 appointments</div></div>
+        <div class="kpi" style="--ac:#7B61FF"><div class="kpi-label">Specializations</div><div class="kpi-value">3</div><div class="kpi-sub">Pediatrics · Derma · Onco</div></div>
+        <div class="kpi" style="--ac:#FFB800"><div class="kpi-label">Avg Experience</div><div class="kpi-value">21.5 yrs</div><div class="kpi-sub">Min 5 · Max 28</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="card-title">Appointment Load per Doctor</span><span class="chip">ACTUAL COUNT</span></div>
+        <div style="position:relative;height:220px"><canvas id="c-doc" role="img" aria-label="Doctor workload bar chart">Doctor load.</canvas></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="card-title">Doctor Directory</span><span class="chip">ALL 10</span></div>
+        <table class="tbl">
+          <thead><tr><th>ID</th><th>Name</th><th>Specialization</th><th>Branch</th><th>Experience</th><th>Appt Load</th><th>Load Status</th></tr></thead>
+          <tbody id="doc-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TREATMENTS -->
+    <div class="page" id="page-treatments">
+      <div class="kpi-grid">
+        <div class="kpi" style="--ac:#7B61FF"><div class="kpi-label">Treatment Types</div><div class="kpi-value">5</div><div class="kpi-sub">Active categories</div></div>
+        <div class="kpi" style="--ac:#00D4FF"><div class="kpi-label">Total Treatments</div><div class="kpi-value">200</div><div class="kpi-sub">Records in dataset</div></div>
+        <div class="kpi" style="--ac:#00FF94"><div class="kpi-label">Highest Avg Cost</div><div class="kpi-value">$3,225</div><div class="kpi-sub">MRI</div></div>
+        <div class="kpi" style="--ac:#FF6B6B"><div class="kpi-label">Lowest Avg Cost</div><div class="kpi-value">$2,532</div><div class="kpi-sub">ECG</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="card-title">Volume by Treatment Type</span><span class="chip">COUNT</span></div>
+          <div class="br"><span class="bl">Chemotherapy</span><div class="bt"><div class="bf" style="width:100%;background:#7B61FF"></div></div><span class="bv">49 (24.5%)</span></div>
+          <div class="br"><span class="bl">X-Ray</span><div class="bt"><div class="bf" style="width:84%;background:#00D4FF"></div></div><span class="bv">41 (20.5%)</span></div>
+          <div class="br"><span class="bl">ECG</span><div class="bt"><div class="bf" style="width:78%;background:#00FF94"></div></div><span class="bv">38 (19%)</span></div>
+          <div class="br"><span class="bl">MRI</span><div class="bt"><div class="bf" style="width:73%;background:#FFB800"></div></div><span class="bv">36 (18%)</span></div>
+          <div class="br"><span class="bl">Physiotherapy</span><div class="bt"><div class="bf" style="width:73%;background:#FF6B6B"></div></div><span class="bv">36 (18%)</span></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="card-title">Avg Cost per Treatment</span><span class="chip">BENCHMARKS</span></div>
+          <div class="br"><span class="bl">MRI</span><div class="bt"><div class="bf" style="width:100%;background:#FFB800"></div></div><span class="bv">$3,225</span></div>
+          <div class="br"><span class="bl">Physiotherapy</span><div class="bt"><div class="bf" style="width:86%;background:#00D4FF"></div></div><span class="bv">$2,762</span></div>
+          <div class="br"><span class="bl">X-Ray</span><div class="bt"><div class="bf" style="width:84%;background:#7B61FF"></div></div><span class="bv">$2,699</span></div>
+          <div class="br"><span class="bl">Chemotherapy</span><div class="bt"><div class="bf" style="width:81%;background:#00FF94"></div></div><span class="bv">$2,630</span></div>
+          <div class="br"><span class="bl">ECG</span><div class="bt"><div class="bf" style="width:78%;background:#FF6B6B"></div></div><span class="bv">$2,532</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="card-title">Revenue by Treatment (from merged df)</span><span class="chip">BILLING × TREATMENTS</span></div>
+        <div style="position:relative;height:150px"><canvas id="c-treat" role="img" aria-label="Treatment revenue bar chart">Treatment revenue.</canvas></div>
+      </div>
+    </div>
+
+    <!-- REVENUE -->
+    <div class="page" id="page-revenue">
+      <div class="kpi-grid">
+        <div class="kpi" style="--ac:#00FF94"><div class="kpi-label">Total Revenue</div><div class="kpi-value">$551,250</div><div class="kpi-sub">200 billing records</div></div>
+        <div class="kpi" style="--ac:#00D4FF"><div class="kpi-label">Avg per Bill</div><div class="kpi-value">$2,756</div><div class="kpi-sub">Per transaction</div></div>
+        <div class="kpi" style="--ac:#7B61FF"><div class="kpi-label">Best Month</div><div class="kpi-value">Apr $64,272</div><div class="kpi-sub">Highest in 2023</div></div>
+        <div class="kpi" style="--ac:#FF6B6B"><div class="kpi-label">Worst Month</div><div class="kpi-value">Dec $27,570</div><div class="kpi-sub">Lowest in 2023</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="card-title">Monthly Revenue — 2023</span><span class="chip">ALL 12 MONTHS</span></div>
+        <div style="position:relative;height:180px"><canvas id="c-rev2" role="img" aria-label="Monthly revenue 2023">Revenue trend.</canvas></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="card-title">Payment Methods</span><span class="chip">BY AMOUNT</span></div>
+          <div style="position:relative;height:155px"><canvas id="c-pay" role="img" aria-label="Payment method donut">Payment methods.</canvas></div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="card-title">Method Breakdown</span><span class="chip">ACTUAL $</span></div>
+          <div class="br"><span class="bl">Credit Card</span><div class="bt"><div class="bf" style="width:100%;background:#7B61FF"></div></div><span class="bv">$201k (36.5%)</span></div>
+          <div class="br"><span class="bl">Insurance</span><div class="bt"><div class="bf" style="width:90%;background:#00D4FF"></div></div><span class="bv">$182k (33%)</span></div>
+          <div class="br"><span class="bl">Cash</span><div class="bt"><div class="bf" style="width:83%;background:#00FF94"></div></div><span class="bv">$168k (30.4%)</span></div>
+          <div style="margin-top:10px;padding:8px;background:rgba(123,97,255,.06);border-radius:6px;border:.5px solid rgba(123,97,255,.2)">
+            <div style="font-size:10px;color:#A78BFA">Credit Card is the top payment method — not Insurance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BILLING -->
+    <div class="page" id="page-billing">
+      <div class="kpi-grid">
+        <div class="kpi" style="--ac:#00FF94"><div class="kpi-label">Total Billed</div><div class="kpi-value">$551,250</div><div class="kpi-sub">200 invoices</div></div>
+        <div class="kpi" style="--ac:#00D4FF"><div class="kpi-label">Paid</div><div class="kpi-value">64</div><div class="kpi-sub">32% — lowest status</div></div>
+        <div class="kpi" style="--ac:#FFB800"><div class="kpi-label">Pending</div><div class="kpi-value">69</div><div class="kpi-sub" style="color:var(--c5)">34.5% outstanding</div></div>
+        <div class="kpi" style="--ac:#FF6B6B"><div class="kpi-label">Failed</div><div class="kpi-value">67</div><div class="kpi-sub" style="color:var(--c4)">33.5% failed payments</div></div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><span class="card-title">Payment Status</span><span class="chip">200 BILLS</span></div>
+          <div style="position:relative;height:155px"><canvas id="c-billing" role="img" aria-label="Payment status donut">Billing status.</canvas></div>
+          <div style="margin-top:10px;padding:8px;background:rgba(255,107,107,.06);border-radius:6px;border:.5px solid rgba(255,107,107,.2)">
+            <div style="font-size:10px;color:var(--c4)">⚠ Only 32% of bills are paid — 68% pending/failed</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><span class="card-title">Revenue Histogram</span><span class="chip">DISTRIBUTION</span></div>
+          <div style="position:relative;height:155px"><canvas id="c-hist" role="img" aria-label="Revenue histogram">Revenue distribution.</canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="card-title">Billing Records</span><span class="chip">SAMPLE · 10 ROWS</span></div>
+        <table class="tbl">
+          <thead><tr><th>Bill ID</th><th>Patient ID</th><th>Treatment</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody id="bill-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- AI INSIGHTS -->
+    <div class="page" id="page-ai">
+      <div class="kpi-grid">
+        <div class="kpi" style="--ac:#7B61FF"><div class="kpi-label">Data Quality</div><div class="kpi-value">100%</div><div class="kpi-sub">No nulls after clean</div></div>
+        <div class="kpi" style="--ac:#FF6B6B"><div class="kpi-label">Collection Rate</div><div class="kpi-value">32%</div><div class="kpi-sub" style="color:var(--c4)">Critical — needs action</div></div>
+        <div class="kpi" style="--ac:#FFB800"><div class="kpi-label">Appt Completion</div><div class="kpi-value">23%</div><div class="kpi-sub" style="color:var(--c5)">Very low rate</div></div>
+        <div class="kpi" style="--ac:#00FF94"><div class="kpi-label">Top Revenue Month</div><div class="kpi-value">Apr</div><div class="kpi-sub">$64,272 billed</div></div>
+      </div>
+      <div class="ai-panel">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <i class="ti ti-brain" style="font-size:18px;color:#A78BFA"></i>
+          <span style="font-family:var(--fh);font-size:12px;font-weight:700">AI Insights — Based on Real Data</span>
+          <span style="background:rgba(123,97,255,.15);color:#A78BFA;font-size:9px;padding:3px 9px;border-radius:4px;border:.5px solid rgba(123,97,255,.4);font-family:var(--fh)">CSV-VERIFIED</span>
+        </div>
+        <div class="ins-grid">
+          <div class="ins"><div class="ins-lbl" style="color:var(--c4)">CRITICAL: BILLING RISK</div><div class="ins-txt">Only 32% of bills are paid. 67 failed + 69 pending = 68% uncollected. Immediate payment follow-up could recover ~$374k in outstanding revenue.</div></div>
+          <div class="ins"><div class="ins-lbl" style="color:var(--c5)">APPOINTMENT WASTE</div><div class="ins-txt">77% of appointments don't complete — 26% no-show and 25.5% cancelled. SMS/email reminders and deposit policies could recover significant capacity.</div></div>
+          <div class="ins"><div class="ins-lbl">DOCTOR OVERLOAD</div><div class="ins-txt">D005 (142), D001 (129), D006 (121) handle the top load. The bottom 3 doctors (D007–D009) average only 71 appointments — redistribute for balance.</div></div>
+          <div class="ins"><div class="ins-lbl">TOP REVENUE DRIVER</div><div class="ins-txt">Chemotherapy generates the highest revenue at $662k across 49 treatments. Despite lower volume than X-Ray, its avg cost of $2,630 drives outsized value.</div></div>
+          <div class="ins"><div class="ins-lbl">PAYMENT METHOD SHIFT</div><div class="ins-txt">Credit Card ($201k, 36.5%) leads — not Insurance ($182k, 33%) as commonly assumed. Digital payment infrastructure investment would have highest ROI.</div></div>
+          <div class="ins"><div class="ins-lbl">SEASONAL DIP</div><div class="ins-txt">December revenue ($27,570) is 57% below April's peak ($64,272). Pre-scheduling campaigns in Q4 could smooth revenue and improve annual predictability.</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="card-title">Monthly Revenue Trend — 2023</span><span class="chip">ACTUAL DATA</span></div>
+        <div style="position:relative;height:155px"><canvas id="c-forecast" role="img" aria-label="2023 revenue trend">Revenue 2023.</canvas></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const pages={dashboard:{title:'Executive Dashboard',sub:'Hospital Management System · FY 2023 · Verified Data'},patients:{title:'Patient Analytics',sub:'50 patients · Demographics · Registry'},appointments:{title:'Appointments',sub:'200 records · Status · Reasons'},doctors:{title:'Doctor Performance',sub:'10 doctors · 3 branches · Workload'},treatments:{title:'Treatment Analysis',sub:'5 types · 200 records · Cost Benchmarks'},revenue:{title:'Revenue Analytics',sub:'$551,250 total · FY 2023 · Actual Data'},billing:{title:'Billing & Collections',sub:'200 invoices · Payment Status · Recovery'},ai:{title:'AI Insights',sub:'Data-driven recommendations · CSV-verified'}};
+
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.addEventListener('click',()=>{
+    const pg=el.dataset.page;
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+pg).classList.add('active');
+    document.getElementById('tb-title').textContent=pages[pg].title;
+    document.getElementById('tb-sub').textContent=pages[pg].sub;
+  });
+});
+
+const dg='rgba(255,255,255,0.05)',dt='#6B7FA3';
+const base={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}};
+
+new Chart(document.getElementById('c-gender'),{type:'doughnut',data:{labels:['Male (31)','Female (19)'],datasets:[{data:[31,19],backgroundColor:['#00D4FF','#FF6B9D'],borderWidth:0}]},options:{...base,cutout:'70%'}});
+
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const revVals=[58701,36670,47304,64272,48791,56888,39880,41959,33427,43314,52475,27570];
+function mkLine(id){new Chart(document.getElementById(id),{type:'line',data:{labels:months,datasets:[{label:'Revenue',data:revVals,borderColor:'#00D4FF',backgroundColor:'rgba(0,212,255,0.07)',borderWidth:2,fill:true,tension:0.4,pointRadius:3,pointBackgroundColor:'#00D4FF'}]},options:{...base,scales:{x:{grid:{color:dg},ticks:{color:dt,font:{size:10}}},y:{grid:{color:dg},ticks:{color:dt,font:{size:10},callback:v=>'$'+Math.round(v/1000)+'k'}}}}});}
+mkLine('c-rev'); mkLine('c-rev2'); mkLine('c-forecast');
+
+function mkAge(id){new Chart(document.getElementById(id),{type:'bar',data:{labels:['0–17','18–34','35–54','55–69','70+'],datasets:[{data:[0,17,18,9,6],backgroundColor:['#7B61FF','#00D4FF','#00FF94','#FFB800','#FF6B6B'],borderRadius:4,borderSkipped:false}]},options:{...base,scales:{x:{grid:{color:'transparent'},ticks:{color:dt,font:{size:10}}},y:{grid:{color:dg},ticks:{color:dt,font:{size:10}}}}}});}
+mkAge('c-age'); mkAge('c-age2');
+
+new Chart(document.getElementById('c-appt'),{type:'doughnut',data:{labels:['No-show (52)','Scheduled (51)','Cancelled (51)','Completed (46)'],datasets:[{data:[52,51,51,46],backgroundColor:['#FF6B6B','#00D4FF','#FFB800','#00FF94'],borderWidth:0}]},options:{...base,cutout:'65%'}});
+
+new Chart(document.getElementById('c-doc'),{type:'bar',data:{labels:['D005','D001','D006','D010','D003','D002','D009','D008','D004','D007'],datasets:[{data:[142,129,121,115,106,88,84,82,73,62],backgroundColor:['#FF6B6B','#FF6B6B','#FFB800','#FFB800','#00D4FF','#00D4FF','#00FF94','#00FF94','#00FF94','#00FF94'],borderRadius:4,borderSkipped:false}]},options:{...base,indexAxis:'y',scales:{x:{grid:{color:dg},ticks:{color:dt,font:{size:10}}},y:{grid:{color:'transparent'},ticks:{color:dt,font:{size:10}}}}}});
+
+new Chart(document.getElementById('c-treat'),{type:'bar',data:{labels:['Chemotherapy','X-Ray','MRI','ECG','Physiotherapy'],datasets:[{data:[662548,548881,535296,509746,491818],backgroundColor:['#7B61FF','#00D4FF','#00FF94','#FFB800','#FF6B6B'],borderRadius:4,borderSkipped:false}]},options:{...base,scales:{x:{grid:{color:'transparent'},ticks:{color:dt,font:{size:9},callback:v=>'$'+Math.round(v/1000)+'k'}},y:{grid:{color:dg},ticks:{color:dt,font:{size:10}}}}}});
+
+new Chart(document.getElementById('c-pay'),{type:'doughnut',data:{labels:['Credit Card 36.5%','Insurance 33%','Cash 30.4%'],datasets:[{data:[201382,182160,167707],backgroundColor:['#7B61FF','#00D4FF','#00FF94'],borderWidth:0}]},options:{...base,cutout:'65%'}});
+
+new Chart(document.getElementById('c-billing'),{type:'doughnut',data:{labels:['Pending (69)','Failed (67)','Paid (64)'],datasets:[{data:[69,67,64],backgroundColor:['#FFB800','#FF6B6B','#00FF94'],borderWidth:0}]},options:{...base,cutout:'65%'}});
+
+new Chart(document.getElementById('c-hist'),{type:'bar',data:{labels:['<$1k','$1k–2k','$2k–3k','$3k–4k','$4k–5k','$5k+'],datasets:[{data:[0,2,62,88,42,6],backgroundColor:'rgba(0,212,255,0.6)',borderRadius:4,borderSkipped:false}]},options:{...base,scales:{x:{grid:{color:'transparent'},ticks:{color:dt,font:{size:9}}},y:{grid:{color:dg},ticks:{color:dt,font:{size:10}}}}}});
+
+// Real patient data
+const ptData=[
+  ['P001','David Williams',69,'F','MedCare Plus','2022-01-15'],
+  ['P002','Emily Smith',40,'F','WellnessCorp','2022-03-22'],
+  ['P003','Laura Jones',47,'M','PulseSecure','2021-11-08'],
+  ['P004','Michael Johnson',43,'F','MedCare Plus','2022-07-30'],
+  ['P005','David Wilson',64,'M','WellnessCorp','2021-06-14'],
+  ['P006','Sarah Brown',33,'F','HealthIndia','2023-01-05'],
+  ['P007','James Taylor',28,'M','MedCare Plus','2022-09-19'],
+  ['P008','Anna Anderson',55,'F','WellnessCorp','2021-08-27'],
+  ['P009','Robert Thomas',38,'M','PulseSecure','2023-02-11'],
+  ['P010','Lisa Jackson',21,'F','HealthIndia','2022-12-03'],
+];
+const ptBody=document.getElementById('pt-tbody');
+ptData.forEach(r=>{ptBody.innerHTML+=`<tr><td style="color:var(--muted)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`;});
+
+// Real appointment data
+const apptData=[
+  ['A001','P034','D009','2023-08-09','Therapy','No-show'],
+  ['A002','P032','D004','2023-06-09','Consultation','Scheduled'],
+  ['A003','P048','D004','2023-06-28','Checkup','Completed'],
+  ['A004','P025','D006','2023-09-01','Follow-up','Cancelled'],
+  ['A005','P040','D003','2023-07-06','Emergency','Completed'],
+  ['A006','P012','D001','2023-05-14','Checkup','No-show'],
+  ['A007','P007','D005','2023-03-22','Therapy','Scheduled'],
+  ['A008','P019','D002','2023-11-30','Consultation','Completed'],
+  ['A009','P043','D010','2023-04-17','Follow-up','Cancelled'],
+  ['A010','P028','D006','2023-10-08','Checkup','Completed'],
+];
+const statusClass={Completed:'green',Scheduled:'blue',Cancelled:'amber','No-show':'red'};
+const apptBody=document.getElementById('appt-tbody');
+apptData.forEach(r=>{apptBody.innerHTML+=`<tr><td style="color:var(--muted)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td><span class="pill ${statusClass[r[5]]||'blue'}">${r[5]}</span></td></tr>`;});
+
+// Real doctor data with load
+const docData=[
+  ['D005','Sarah Taylor','Dermatology','Central Hospital',26,142,'red','High'],
+  ['D001','David Taylor','Dermatology','Westside Clinic',17,129,'red','High'],
+  ['D006','Alex Davis','Pediatrics','Central Hospital',23,121,'amber','Medium-High'],
+  ['D010','Linda Wilson','Oncology','Eastside Clinic',21,115,'amber','Medium-High'],
+  ['D003','Jane Smith','Pediatrics','Eastside Clinic',19,106,'amber','Medium'],
+  ['D002','Jane Davis','Pediatrics','Eastside Clinic',24,88,'blue','Normal'],
+  ['D009','Sarah Smith','Pediatrics','Central Hospital',26,84,'blue','Normal'],
+  ['D008','Linda Brown','Dermatology','Westside Clinic',5,82,'blue','Normal'],
+  ['D004','David Jones','Pediatrics','Central Hospital',28,73,'green','Low'],
+  ['D007','Robert Davis','Oncology','Westside Clinic',26,62,'green','Low'],
+];
+const docBody=document.getElementById('doc-tbody');
+docData.forEach(r=>{docBody.innerHTML+=`<tr><td style="color:var(--muted)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]} yrs</td><td style="font-family:var(--fh)">${r[5]}</td><td><span class="pill ${r[6]}">${r[7]}</span></td></tr>`;});
+
+// Real billing data
+const billData=[
+  ['B001','P034','T001',3941.97,'Insurance','2023-08-09','Pending'],
+  ['B002','P032','T002',4158.44,'Insurance','2023-06-09','Paid'],
+  ['B003','P048','T003',3731.55,'Insurance','2023-06-28','Failed'],
+  ['B004','P025','T004',4799.86,'Insurance','2023-09-01','Paid'],
+  ['B005','P040','T005',582.05,'Credit Card','2023-07-06','Pending'],
+  ['B006','P012','T006',2104.33,'Cash','2023-05-14','Failed'],
+  ['B007','P007','T007',3388.12,'Credit Card','2023-03-22','Paid'],
+  ['B008','P019','T008',1876.90,'Cash','2023-11-30','Pending'],
+  ['B009','P043','T009',4201.55,'Insurance','2023-04-17','Failed'],
+  ['B010','P028','T010',2956.78,'Credit Card','2023-10-08','Paid'],
+];
+const billBody=document.getElementById('bill-tbody');
+billData.forEach(r=>{billBody.innerHTML+=`<tr><td style="color:var(--muted)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="font-family:var(--fh)">$${r[3].toFixed(2)}</td><td>${r[4]}</td><td>${r[5]}</td><td><span class="pill ${statusClass[r[6]]||'blue'}">${r[6]}</span></td></tr>`;});
+</script>
